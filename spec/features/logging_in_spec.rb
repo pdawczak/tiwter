@@ -18,4 +18,34 @@ feature "Logging In" do
 
     expect(page).to have_content("Welcome! You have signed up successfully.")
   end
+
+  context "application" do
+    before(:each) do
+      @user = create(:user, username: "tester", email: "tester@example.com", 
+                            password: "secret01", password_confirmation: "secret01")
+
+      visit "/"
+      click_link "Login"
+    end
+
+    after(:each) do
+      expect(page).to have_content("Signed in successfully.")
+    end
+
+    scenario "with username" do
+      within("#new_user") do
+        fill_in "Login", with: @user.username
+        fill_in "Password", with: @user.password
+      end
+      click_button "Sign in"
+    end
+
+    scenario "with email" do
+      within("#new_user") do
+        fill_in "Login", with: @user.email
+        fill_in "Password", with: @user.password
+      end
+      click_button "Sign in"
+    end
+  end
 end
